@@ -35,7 +35,18 @@ function App() {
           type="text"
           placeholder="Digite o seu CEP"
           value={input}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={(e) => {
+            let written = e.target.value;
+            setInput(written.replace(/\D/g, ''));
+            if (written.length === 8 && !written.includes('-')) {
+              let inputValue = written.replace(/\D/g, '').match(/(\d{5})(\d{3})/);
+
+              inputValue = `${inputValue[1]}-${inputValue[2]}`;
+              setInput(inputValue);
+            } else if (written.length >= 8 && written.includes('-')) {
+              setInput(written.replace('-',''));
+            }
+          }}
         />
 
         <button className="button-search" onClick={handleSearch}>
@@ -47,7 +58,8 @@ function App() {
         <main className='main'>
           <h2>CEP: {cep.cep}</h2>
           <span>{cep.logradouro}</span>
-          <span>Complemento: {cep.complemento}</span>
+          <span>DDD: {cep.ddd}</span>
+          {cep.complemento && <span>Complemento: {cep.complemento}</span>}
           <span>Bairro: {cep.bairro}</span>
           <span>{cep.localidade} - {cep.uf}</span>
         </main>
